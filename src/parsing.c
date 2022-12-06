@@ -2,9 +2,9 @@
 
 
 
-void parse_commandline(int argc, char **argv, int *N, double *dt, int *option)
+void parse_commandline(int argc, char **argv, int *N, double *dt)
 {
-if(argc != 5)
+if(argc != 4)
   {
   explain_useage_exit(argv[0]);
   }
@@ -25,16 +25,6 @@ if(1 != sscanf(argv[2], "%le", dt) )
   }
 
 if(*dt <= 0.0)
-  {
-  explain_useage_exit(argv[0]);
-  }
-
-if(1 != sscanf(argv[3], "%d", option) )
-  {
-  explain_useage_exit(argv[0]);
-  }
-
-if(*option != 1)
   {
   explain_useage_exit(argv[0]);
   }

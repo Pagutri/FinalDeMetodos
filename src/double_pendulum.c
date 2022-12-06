@@ -33,7 +33,7 @@ salma.gutierrez@cimat.mx
 
 int main(int argc, char **argv)
 {
-int n, N, option;
+int n, N;
 double t, dt;
 double k1_theta, k2_theta, k1_thetadot, k2_thetadot;
 double theta, thetadot, thetadotdot;
@@ -44,9 +44,9 @@ struct SDL_graphics *SDL_graphics;
 SDL_Event event;
 FILE *output, *shscript;
 
-parse_commandline(argc, argv, &N, &dt, &option);
+parse_commandline(argc, argv, &N, &dt);
 
-output = fopen(argv[4], "w");
+output = fopen(argv[3], "w");
 initialize_rand();
 
 theta = fRand(0.0, PI);
@@ -84,9 +84,7 @@ if(-1 == system("chmod +x ppm_to_gif_script.sh"))
   exit(0);
   }
 
-switch(option)
-  {
-  case 1: /* Runge-Kutta */
+/* Runge-Kutta */
     for(n = 0; n < N; n++)
       {
       /* Ecuación de movimiento del ángulo theta */
@@ -161,8 +159,6 @@ switch(option)
           }
         }
       }
-    break;
-  }
 
 printf("\n\nFINISHED.\n\nRun './ppm_to_gif_script.sh' to convert ppm output to gif.\n\n");
 fclose(shscript);
