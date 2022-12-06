@@ -84,7 +84,7 @@ if(-1 == system("chmod +x ppm_to_gif_script.sh"))
   exit(0);
   }
 
-/* Runge-Kutta */
+/* Inicio del Runge-Kutta */
 for(n = 0; n < N; n++)
   {
   /* Ecuación de movimiento del ángulo theta */
@@ -159,6 +159,7 @@ for(n = 0; n < N; n++)
       }
     }
   }
+/* Fin del Runge-Kutta */
 
 printf("\n\nFINISHED.\n\nRun './ppm_to_gif_script.sh' to convert ppm output to gif.\n\n");
 fclose(shscript);
