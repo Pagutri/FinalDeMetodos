@@ -49,6 +49,7 @@ parse_commandline(argc, argv, &N, &dt);
 output = fopen(argv[3], "w");
 initialize_rand();
 
+/* Condiciones iniciales */
 theta = fRand(0.0, PI);
 phi = fRand(0.0, PI);
 thetadot = 0.0;
@@ -84,15 +85,16 @@ if(-1 == system("chmod +x ppm_to_gif_script.sh"))
   exit(0);
   }
 
-/* Inicio del Runge-Kutta */
+
 for(n = 0; n < N; n++)
   {
-  /* Ecuación de movimiento del ángulo theta */
+  /* Inicio de iteración Runge-Kutta ......................................................*/
+  /* Ecuación de movimiento del ángulo theta (masa 1) */
   thetadotdot = (GRAVITY * (0.5 * sin(phi) * cos(theta - phi) -\
     sin(theta)) / LENGHT - 0.5 * sin(theta - phi) * (pow(phidot, 2) +\
     pow(thetadot, 2) * cos(theta - phi))) / (1.0 - 0.5 * pow(cos(theta - phi), 2));
 
-  /* Ecuación de movimiento del ángulo phi */
+  /* Ecuación de movimiento del ángulo phi (masa 2) */
   phidotdot = ((pow(thetadot, 2) + 0.5 * pow(phidot, 2) *\
     cos(theta - phi)) * sin(theta - phi) + GRAVITY * (sin(theta) *\
     cos(theta - phi) - sin(phi)) / LENGHT) / (1.0 - 0.5 *\
@@ -127,6 +129,7 @@ for(n = 0; n < N; n++)
   t += dt;
 
   fprintf(output, "%.8f  %.8f  %.8f\n", t, theta, phi); 
+  /* Fin de la iteración Runge-Kutta ......................................................*/
 
   /* Visualización: */
   draw_origin(SDL_graphics, BLOBSIZE);
@@ -159,7 +162,6 @@ for(n = 0; n < N; n++)
       }
     }
   }
-/* Fin del Runge-Kutta */
 
 printf("\n\nPROCESO COMPLETO.\n\nCorrer './ppm_to_gif_script.sh' para crear los .gif.\n\n");
 fclose(shscript);
