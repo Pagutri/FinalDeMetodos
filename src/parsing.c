@@ -34,15 +34,11 @@ if(*dt <= 0.0)
 
 void explain_useage_exit(char *myname)
 {
-printf("\n\nUseage:\n\n%s  N  dt  option  output_file\n\n"\
-       "will simulate a chaotic double pendulum.\n"\
-       "Set option to 0 to solve the equations of motion with the\n"\
-       "Euler Forward algorithm and set it to 1 to use Runge-Kutta.\n"\
-       "Any algorithm will work with 'N' time steps of 'dt' lenght.\n"\
-       "'N' must be a positive integer, 'dt' must be positive.\n\n", myname);
-printf("Graphical output uses two methods:\n"\
-       "First, the SDL library (libsdlorg) for on-the-fly graphics window output, and\n"\
-       "second, ppm picture output, automatically converted to gif by system calls.\n\n\n");
+printf("\n\nUso:\n\n%s  N  dt  output_file\n\n"\
+       "simula el movimiento de un péndulo doble utilizando el\n"\
+       "método de Runge-Kutta con 'N' pasos temporales de longitud 'dt'.\n"\
+       "'N' debe ser un entero positivo, 'dt' debe ser positivo y pequeño.\n"\
+       "'output_file' guardará los valores de los ángulos en el tiempo.\n\n", myname);
 exit(0);
 }
 

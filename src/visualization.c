@@ -8,7 +8,7 @@ int allocate_SDL_pixelarray(struct SDL_graphics *graph)
 graph->pixel=(unsigned char*)malloc(3*graph->width*graph->height*sizeof(unsigned char));
 if(NULL == graph->pixel)
   {
-  printf("\n\nMemory allocation error in function 'allocate_SDL_pixelarray()'.\n\n");
+  printf("\n\nError al alojar memoria en función 'allocate_SDL_pixelarray()'.\n\n");
   exit(0);
   }
 return(1);
@@ -188,7 +188,7 @@ line = 3*graph->width;
 
 if(left>right || top>bottom || width<=0 || brightness<0 || brightness>255)
   {
-  printf("\n\nFunction 'drawbox()' was called with nonsense arguments.\n\n");
+  printf("\n\nFunción 'drawbox()' fue llamada con argumentos inválidos.\n\n");
   exit(0);
   }
 
@@ -237,7 +237,7 @@ FILE *file;
 
 if((file=fopen(filename,"w"))==NULL)
   {
-  printf("\n\nError:\n\nCould not open the file %s for writing\n\n",filename);
+  printf("\n\nError:\n\nNo se pudo abrir el archivo %s para escritura\n\n",filename);
   exit(0);
   }
 

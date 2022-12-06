@@ -55,14 +55,14 @@ thetadot = 0.0;
 phidot = 0.0;
 t = 0.0;
 
-printf("Initial angles: theta = %.8f   phi = %.8f\n", theta, phi);
+printf("Ángulos iniciales: theta = %.8f   phi = %.8f\n", theta, phi);
 fprintf(output, "%.8f  %.8f  %.8f\n", t, theta, phi);
 
 /* Inicialización del entorno gráfico: ................................ */
 SDL_graphics=(struct SDL_graphics*)malloc(sizeof(struct SDL_graphics));
 if(NULL == SDL_graphics)
   {
-  printf("\n\nError in allocating struct SDL_graphics *SDL_graphics\n\n");
+  printf("\n\nError al alojar struct SDL_graphics *SDL_graphics\n\n");
   exit(0);
   }
 SDL_graphics->width = GRAPHICS_WIDTH;
@@ -75,12 +75,12 @@ initialize_pixel_array(SDL_graphics);
 shscript = fopen("ppm_to_gif_script.sh", "w");
 if(NULL == shscript)
   {
-  printf("\n\nCould not open file 'ppm_to_gif_script.sh' for writing.\n\n");
+  printf("\n\nNo se pudo abrir el archivo 'ppm_to_gif_script.sh' para escritura.\n\n");
   exit(0);
   }
 if(-1 == system("chmod +x ppm_to_gif_script.sh"))
   {
-  printf("\n\nCould not make 'ppm_to_gif_script.sh' executable.\n\n");
+  printf("\n\nNo se pudo convertir el archivo 'ppm_to_gif_script.sh' en ejecutable.\n\n");
   exit(0);
   }
 
@@ -153,7 +153,7 @@ for(n = 0; n < N; n++)
     if(event.type == SDL_KEYDOWN &&
       (event.key.keysym.sym == SDLK_c && event.key.keysym.mod & KMOD_CTRL))
       {
-      printf("\n\nGOT KILLED.\n\nRun './ppm_to_gif_script.sh' to convert ppm output to gif.\n\n");
+      printf("\n\nSE MATÓ EL PROCESO.\n\nCorrer './ppm_to_gif_script.sh' para crear los .gif.\n\n");
       fclose(shscript);
       exit(0);
       }
@@ -161,7 +161,7 @@ for(n = 0; n < N; n++)
   }
 /* Fin del Runge-Kutta */
 
-printf("\n\nFINISHED.\n\nRun './ppm_to_gif_script.sh' to convert ppm output to gif.\n\n");
+printf("\n\nPROCESO COMPLETO.\n\nCorrer './ppm_to_gif_script.sh' para crear los .gif.\n\n");
 fclose(shscript);
 fclose(output);
 
