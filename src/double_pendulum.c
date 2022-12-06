@@ -85,80 +85,80 @@ if(-1 == system("chmod +x ppm_to_gif_script.sh"))
   }
 
 /* Runge-Kutta */
-    for(n = 0; n < N; n++)
+for(n = 0; n < N; n++)
+  {
+  /* Ecuación de movimiento del ángulo theta */
+  thetadotdot = (GRAVITY * (0.5 * sin(phi) * cos(theta - phi) -\
+    sin(theta)) / LENGHT - 0.5 * sin(theta - phi) * (pow(phidot, 2) +\
+    pow(thetadot, 2) * cos(theta - phi))) / (1.0 - 0.5 * pow(cos(theta - phi), 2));
+
+  /* Ecuación de movimiento del ángulo phi */
+  phidotdot = ((pow(thetadot, 2) + 0.5 * pow(phidot, 2) *\
+    cos(theta - phi)) * sin(theta - phi) + GRAVITY * (sin(theta) *\
+    cos(theta - phi) - sin(phi)) / LENGHT) / (1.0 - 0.5 *\
+    pow(cos(theta - phi), 2));
+
+
+  k1_theta = dt * thetadot;
+  k1_thetadot = dt * thetadotdot;
+  k1_phi = dt * phidot;
+  k1_phidot = dt * phidotdot;
+
+  k2_theta = dt * (thetadot + k1_thetadot);
+  k2_thetadot = dt * (GRAVITY * (0.5 * sin(phi + k1_phi) * cos(theta +\
+    k1_theta - phi - k1_phi) - sin(theta + k1_theta)) / LENGHT - 0.5 *\
+    sin(theta + k1_theta - phi - k1_phi) * (pow(phidot + k1_phidot, 2) +\
+    pow(thetadot + k1_thetadot, 2) * cos(theta + k1_theta - phi -\
+    k1_phi))) / (1.0 - 0.5 * pow(cos(theta + k1_theta - phi - k1_phi), 2)); 
+  k2_phi = dt * (phidot + k1_phidot);
+  k2_phidot = dt * ((pow(thetadot + k1_thetadot, 2) + 0.5 * pow(phidot + k1_phidot, 2) *\
+    cos(theta + k1_theta - phi - k1_phi)) * sin(theta + k1_theta - phi - k1_phi) + GRAVITY *\
+    (sin(theta + k1_theta) * cos(theta + k1_theta - phi - k1_phi) - sin(phi + k1_phi)) /\
+    LENGHT) / (1.0 - 0.5 * pow(cos(theta + k1_theta - phi - k1_phi), 2));    
+
+  theta += 0.5 * (k1_theta + k2_theta);
+  theta = boundary_conditions(theta);
+  thetadot += 0.5 * (k1_thetadot + k2_thetadot);  
+
+  phi += 0.5 * (k1_phi + k2_phi);
+  phi = boundary_conditions(phi);
+  phidot += 0.5 * (k1_phidot + k2_phidot);
+
+  t += dt;
+
+  fprintf(output, "%.8f  %.8f  %.8f\n", t, theta, phi); 
+
+  /* Visualización: */
+  draw_origin(SDL_graphics, BLOBSIZE);
+  visualize_mass(SDL_graphics, theta, phi, 0, BLOBSIZE);
+  visualize_mass(SDL_graphics, theta, phi, 1, BLOBSIZE);
+
+  drawbox(SDL_graphics, GRAPHICS_MARGIN, GRAPHICS_WIDTH-GRAPHICS_MARGIN,
+      GRAPHICS_MARGIN, GRAPHICS_HEIGHT-GRAPHICS_MARGIN, GRAPHICS_MARGIN/2, 0);
+  sdl_update(SDL_graphics);
+  fade_pixel_array(SDL_graphics, FADER);
+
+  if(0 == n%GIF_STEP)
+    {
+    /* Escribir entrada del script que crea las imágenes .gif: */
+    sprintf(ppm_file, "Snapshot_%08d.ppm", n+1);
+    write_ppm(SDL_graphics, ppm_file);
+    fprintf(shscript, "(convert %s Snapshot_%08d.gif; rm %s)\n", ppm_file, n+1, ppm_file);
+    }
+
+  /* Matar la visualización al presionar ctrl+C: */
+  signal(SIGINT, exit);
+  while( SDL_PollEvent(&event) )
+    {
+    if(event.type == SDL_KEYDOWN &&
+      (event.key.keysym.sym == SDLK_c && event.key.keysym.mod & KMOD_CTRL))
       {
-      /* Ecuación de movimiento del ángulo theta */
-      thetadotdot = (GRAVITY * (0.5 * sin(phi) * cos(theta - phi) -\
-        sin(theta)) / LENGHT - 0.5 * sin(theta - phi) * (pow(phidot, 2) +\
-        pow(thetadot, 2) * cos(theta - phi))) / (1.0 - 0.5 * pow(cos(theta - phi), 2));
-
-      /* Ecuación de movimiento del ángulo phi */
-      phidotdot = ((pow(thetadot, 2) + 0.5 * pow(phidot, 2) *\
-        cos(theta - phi)) * sin(theta - phi) + GRAVITY * (sin(theta) *\
-        cos(theta - phi) - sin(phi)) / LENGHT) / (1.0 - 0.5 *\
-        pow(cos(theta - phi), 2));
-
-
-      k1_theta = dt * thetadot;
-      k1_thetadot = dt * thetadotdot;
-      k1_phi = dt * phidot;
-      k1_phidot = dt * phidotdot;
-
-      k2_theta = dt * (thetadot + k1_thetadot);
-      k2_thetadot = dt * (GRAVITY * (0.5 * sin(phi + k1_phi) * cos(theta +\
-        k1_theta - phi - k1_phi) - sin(theta + k1_theta)) / LENGHT - 0.5 *\
-        sin(theta + k1_theta - phi - k1_phi) * (pow(phidot + k1_phidot, 2) +\
-        pow(thetadot + k1_thetadot, 2) * cos(theta + k1_theta - phi -\
-        k1_phi))) / (1.0 - 0.5 * pow(cos(theta + k1_theta - phi - k1_phi), 2)); 
-      k2_phi = dt * (phidot + k1_phidot);
-      k2_phidot = dt * ((pow(thetadot + k1_thetadot, 2) + 0.5 * pow(phidot + k1_phidot, 2) *\
-        cos(theta + k1_theta - phi - k1_phi)) * sin(theta + k1_theta - phi - k1_phi) + GRAVITY *\
-        (sin(theta + k1_theta) * cos(theta + k1_theta - phi - k1_phi) - sin(phi + k1_phi)) /\
-        LENGHT) / (1.0 - 0.5 * pow(cos(theta + k1_theta - phi - k1_phi), 2));    
-
-      theta += 0.5 * (k1_theta + k2_theta);
-      theta = boundary_conditions(theta);
-      thetadot += 0.5 * (k1_thetadot + k2_thetadot);  
-
-      phi += 0.5 * (k1_phi + k2_phi);
-      phi = boundary_conditions(phi);
-      phidot += 0.5 * (k1_phidot + k2_phidot);
-
-      t += dt;
-
-      fprintf(output, "%.8f  %.8f  %.8f\n", t, theta, phi); 
-
-      /* Visualización: */
-      draw_origin(SDL_graphics, BLOBSIZE);
-      visualize_mass(SDL_graphics, theta, phi, 0, BLOBSIZE);
-      visualize_mass(SDL_graphics, theta, phi, 1, BLOBSIZE);
-
-      drawbox(SDL_graphics, GRAPHICS_MARGIN, GRAPHICS_WIDTH-GRAPHICS_MARGIN,
-          GRAPHICS_MARGIN, GRAPHICS_HEIGHT-GRAPHICS_MARGIN, GRAPHICS_MARGIN/2, 0);
-      sdl_update(SDL_graphics);
-      fade_pixel_array(SDL_graphics, FADER);
-
-      if(0 == n%GIF_STEP)
-        {
-        /* Escribir entrada del script que crea las imágenes .gif: */
-        sprintf(ppm_file, "Snapshot_%08d.ppm", n+1);
-        write_ppm(SDL_graphics, ppm_file);
-        fprintf(shscript, "(convert %s Snapshot_%08d.gif; rm %s)\n", ppm_file, n+1, ppm_file);
-        }
-
-      /* Matar la visualización al presionar ctrl+C: */
-      signal(SIGINT, exit);
-      while( SDL_PollEvent(&event) )
-        {
-        if(event.type == SDL_KEYDOWN &&
-          (event.key.keysym.sym == SDLK_c && event.key.keysym.mod & KMOD_CTRL))
-          {
-          printf("\n\nGOT KILLED.\n\nRun './ppm_to_gif_script.sh' to convert ppm output to gif.\n\n");
-          fclose(shscript);
-          exit(0);
-          }
-        }
+      printf("\n\nGOT KILLED.\n\nRun './ppm_to_gif_script.sh' to convert ppm output to gif.\n\n");
+      fclose(shscript);
+      exit(0);
       }
+    }
+  }
 
 printf("\n\nFINISHED.\n\nRun './ppm_to_gif_script.sh' to convert ppm output to gif.\n\n");
 fclose(shscript);
