@@ -34,7 +34,7 @@ if(1 != sscanf(argv[3], "%d", option) )
   explain_useage_exit(argv[0]);
   }
 
-if(*option != 0 && *option != 1)
+if(*option != 1)
   {
   explain_useage_exit(argv[0]);
   }

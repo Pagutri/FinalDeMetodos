@@ -86,64 +86,6 @@ if(-1 == system("chmod +x ppm_to_gif_script.sh"))
 
 switch(option)
   {
-  case 0: /* Euler-Forward */
-    for(n = 0; n < N; n++)
-      {
-      /* Equation of motion of angle theta */
-      thetadotdot = (GRAVITY * (0.5 * sin(phi) * cos(theta - phi) -\
-        sin(theta)) / LENGHT - 0.5 * sin(theta - phi) * (pow(phidot, 2) +\
-        pow(thetadot, 2) * cos(theta - phi))) / (1.0 - 0.5 * pow(cos(theta - phi), 2));
-
-      /* Equation of motion of angle phi */
-      phidotdot = ((pow(thetadot, 2) + 0.5 * pow(phidot, 2) *\
-        cos(theta - phi)) * sin(theta - phi) + GRAVITY * (sin(theta) *\
-        cos(theta - phi) - sin(phi)) / LENGHT) / (1.0 - 0.5 *\
-        pow(cos(theta - phi), 2));
-
-      thetadot += dt * thetadotdot;
-      phidot   += dt * phidotdot;
-
-      theta += dt * thetadot;
-      theta = boundary_conditions(theta);
-      phi += dt * phidot;
-      phi = boundary_conditions(phi);
-      t += dt;
-
-      fprintf(output, "%.8f  %.8f  %.8f\n", t, theta, phi);
-
-      /* SDL visualization: */
-      draw_origin(SDL_graphics, BLOBSIZE);
-      visualize_mass(SDL_graphics, theta, phi, 0, BLOBSIZE);
-      visualize_mass(SDL_graphics, theta, phi, 1, BLOBSIZE);
-
-      drawbox(SDL_graphics, GRAPHICS_MARGIN, GRAPHICS_WIDTH-GRAPHICS_MARGIN,
-          GRAPHICS_MARGIN, GRAPHICS_HEIGHT-GRAPHICS_MARGIN, GRAPHICS_MARGIN/2, 0);
-      sdl_update(SDL_graphics);
-      fade_pixel_array(SDL_graphics, FADER);
-
-      if(0 == n % GIF_STEP)
-        {
-        /* ppm picture file output and gif conversion script entry: */
-        sprintf(ppm_file, "Snapshot_%08d.ppm", n+1);
-        write_ppm(SDL_graphics, ppm_file);
-        fprintf(shscript, "(convert %s Snapshot_%08d.gif; rm %s)\n", ppm_file, n+1, ppm_file);
-        }
-
-      /* Kill SDL if Strg+c was pressed in the stdin console: */
-      signal(SIGINT, exit);
-      while( SDL_PollEvent(&event) )
-        {
-        if(event.type == SDL_KEYDOWN &&
-          (event.key.keysym.sym == SDLK_c && event.key.keysym.mod & KMOD_CTRL))
-          {
-          printf("\n\nGOT KILLED.\n\nRun './ppm_to_gif_script.sh' to convert ppm output to gif.\n\n");
-          fclose(shscript);
-          exit(0);
-          }
-        }
-      }
-    break;
-
   case 1: /* Runge-Kutta */
     for(n = 0; n < N; n++)
       {
