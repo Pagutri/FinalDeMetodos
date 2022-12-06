@@ -1,31 +1,31 @@
 /*
- * This program solves the equations of motion for a double
- * pendulum using the Euler Forward and Runge-Kutta methods.
- * It also computes the Lyapunov exponents for this chaotic
- * system.
- * It is stablished that the two lenghts and masses of the
- * pendulum are equal. The initial conditions are both an-
- * gular velocities equal to zero with random angles.
- * At the end, a graphical output for the evolution of the
- * system is created.
+Programa que resuelve las ecuaciones de movimiento de un
+péndulo doble utilizando el método de Runge-Kutta de 4
+pasos. También calcula los exponentes de Lyapunov de este
+sistema caótico.
+Se establece que las dos longitudes y masas del péndulo
+son iguales. Las condiciones iniciales consisten en ambas
+velocidades angulares nulas y ángulos aleatorios.
+Al terminar, se crea una visualización de la evolución
+del sistema.
 
- *
- * Graphical output uses two methods:
- * ----------------------------------
- * First, there is an on-the-fly graphics output using the free
- * Simple DirectMedia Layer (SDL) library
- * http://www.libsdl.org/
- * 
- * Second, the program writes uncompressed ppm pictures and
- * converts them on-the-fly into compressed gif pictures via
- * a system call. The gif pictures can later be arranged to
- * give a movie, for example with the OpenShot editor
- * http://www.openshot.org/
- *
- * 
- * Patricia Gutierrez, May 2018
- * gutierrezrs2015@licifug.ugto.mx
- *
+
+
+La visualización se construye en dos pasos:
+-------------------------------------------
+Primero, se dibujan los estados utilizando la librería
+gratuita Simple DirectMedia Layer (SDL)
+http://www.libsdl.org/
+
+Segundo, llamando a ppm_to_gif_script.sh, se guardan
+en imágenes los estados sucesivos del sistema que
+después pueden utilizarse para hacer un gif, por
+ejemplo, en Python.
+
+
+
+Salma Gutiérrez, diciembre 2022
+salma.gutierrez@cimat.mx
  */ 
 
 #include "libraries.h"
@@ -58,7 +58,7 @@ t = 0.0;
 printf("Initial angles: theta = %.8f   phi = %.8f\n", theta, phi);
 fprintf(output, "%.8f  %.8f  %.8f\n", t, theta, phi);
 
-/* SDL graphics allocation and initialization: ........................ */
+/* Inicialización del entorno gráfico: ................................ */
 SDL_graphics=(struct SDL_graphics*)malloc(sizeof(struct SDL_graphics));
 if(NULL == SDL_graphics)
   {
@@ -70,7 +70,7 @@ SDL_graphics->height= GRAPHICS_HEIGHT;
 allocate_SDL_pixelarray(SDL_graphics);
 initialize_SDL_graphics(SDL_graphics);
 initialize_pixel_array(SDL_graphics);
-/* End of SDL graphics allocation and initialization .................. */
+/* Terminar la inicialización del entorno gráfico ..................... */
 
 shscript = fopen("ppm_to_gif_script.sh", "w");
 if(NULL == shscript)
@@ -147,12 +147,12 @@ switch(option)
   case 1: /* Runge-Kutta */
     for(n = 0; n < N; n++)
       {
-      /* Equation of motion of angle theta */
+      /* Ecuación de movimiento del ángulo theta */
       thetadotdot = (GRAVITY * (0.5 * sin(phi) * cos(theta - phi) -\
         sin(theta)) / LENGHT - 0.5 * sin(theta - phi) * (pow(phidot, 2) +\
         pow(thetadot, 2) * cos(theta - phi))) / (1.0 - 0.5 * pow(cos(theta - phi), 2));
 
-      /* Equation of motion of angle phi */
+      /* Ecuación de movimiento del ángulo phi */
       phidotdot = ((pow(thetadot, 2) + 0.5 * pow(phidot, 2) *\
         cos(theta - phi)) * sin(theta - phi) + GRAVITY * (sin(theta) *\
         cos(theta - phi) - sin(phi)) / LENGHT) / (1.0 - 0.5 *\
@@ -188,7 +188,7 @@ switch(option)
 
       fprintf(output, "%.8f  %.8f  %.8f\n", t, theta, phi); 
 
-      /* SDL visualization: */
+      /* Visualización: */
       draw_origin(SDL_graphics, BLOBSIZE);
       visualize_mass(SDL_graphics, theta, phi, 0, BLOBSIZE);
       visualize_mass(SDL_graphics, theta, phi, 1, BLOBSIZE);
@@ -200,13 +200,13 @@ switch(option)
 
       if(0 == n%GIF_STEP)
         {
-        /* ppm picture file output and gif conversion script entry: */
+        /* Escribir entrada del script que crea las imágenes .gif: */
         sprintf(ppm_file, "Snapshot_%08d.ppm", n+1);
         write_ppm(SDL_graphics, ppm_file);
         fprintf(shscript, "(convert %s Snapshot_%08d.gif; rm %s)\n", ppm_file, n+1, ppm_file);
         }
 
-      /* Kill SDL if Strg+c was pressed in the stdin console: */
+      /* Matar la visualización al presionar ctrl+C: */
       signal(SIGINT, exit);
       while( SDL_PollEvent(&event) )
         {
@@ -233,7 +233,7 @@ return(1);
 
 double boundary_conditions(double angle)
 {
-/* Both angles can go from zero to 2 * PI radians. */
+/* Los ángulos pueden ir de cero a 2 * PI radianes. */
 while(angle > 2.0 * PI)
   {
   angle -= 2.0 * PI;

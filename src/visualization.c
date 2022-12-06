@@ -76,10 +76,7 @@ return(1);
 
 int draw_origin(struct SDL_graphics *graph, int radius)
 {
-/*
- * Draws the point from where mass 1 is pending.
- *
- */   
+/* Dibuja el punto del que cuelga la masa 1 */   
 int row, col;
 float x, y;
 float r, beta, dbeta;
@@ -112,10 +109,10 @@ return(1);
 int visualize_mass(struct SDL_graphics *graph, double theta, double phi, int m, int radius)
 {
 /*
- * Draws a filled circular disk with 'radius' in units of pixels around
- * the (x, y) position of mass m.
- * m = 0 corresponds to mass 2.
- * m = 1 corresponds to mass 1.
+ * Dibuja un círculo de radio 'radius' en unidades de pixel con centro
+ * en la posición (x, y) de la masa 'm'.
+ * m = 0 corresponde a la masa 2.
+ * m = 1 corresponde a la masa 1.
  *
  */   
 int row, col;
@@ -130,11 +127,11 @@ y1 = (int)(LENGHT * M_TO_PIXEL * cos(theta));
 x2 = (int)(LENGHT * M_TO_PIXEL * sin(phi));
 y2 = (int)(LENGHT * M_TO_PIXEL * cos(phi));
 
-/* Coordinates x2 and y2 are added just for mass 2 */
+/* Las coordenadas x2, y2 se suman sólo para la masa 2 */
 x = xo + x1 + (1 - m) * x2;
 y = yo + y1 + (1 - m) * y2;
 
-/* Draw line */
+/* Dibujar línea */
 for(r = 0.0; r < LENGHT; r += 0.01)
   {
   if(m)
@@ -150,14 +147,14 @@ for(r = 0.0; r < LENGHT; r += 0.01)
 
   if((row >= 0) && (row < graph->height) && (col >= 0) && (col < graph->width))
     {
-    /* The color is black for mass 1 and red for mass 2 */
+    /* El color es negro para la masa 1 y rojo para la masa 2 */
     graph->pixel[3*row*graph->width + 3*col    ] = (1 - m) * 225;
     graph->pixel[3*row*graph->width + 3*col + 1] = 0;
     graph->pixel[3*row*graph->width + 3*col + 2] = 0;
     }
   }
 
-/* Draw mass */
+/* Dibujar masa */
 for(r = 0.0; r < radius; r += 0.5)
   {
   dbeta = 1.0 / (2.0 * PI * r);

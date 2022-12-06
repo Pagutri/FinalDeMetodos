@@ -1,9 +1,3 @@
-/*
- * Some very simple quasi-random number generation functions,
- * using the rand() function from stdlib. Don't use these
- * functions if you need high quality random numbers.
- *
- */
 #include "libraries.h"
 
 
