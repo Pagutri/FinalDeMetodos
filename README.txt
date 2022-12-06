@@ -29,8 +29,10 @@ Primero, se dibujan los estados utilizando la librería
 gratuita Simple DirectMedia Layer (SDL)
 http://www.libsdl.org/
 
-Segundo, el programa escribe imágenes ppm sin comprimir
-y las convierte en un gif.
+Segundo, llamando a ppm_to_gif_script.sh, se guardan
+en imágenes los estados sucesivos del sistema que
+después pueden utilizarse para hacer un gif, por
+ejemplo, en Python.
 
 
 
