@@ -119,11 +119,11 @@ for(n = 0; n < N; n++)
     LENGHT) / (1.0 - 0.5 * pow(cos(theta + k1_theta - phi - k1_phi), 2));    
 
   theta += 0.5 * (k1_theta + k2_theta);
-  theta = boundary_conditions(theta);
+  /*theta = boundary_conditions(theta);*/
   thetadot += 0.5 * (k1_thetadot + k2_thetadot);  
 
   phi += 0.5 * (k1_phi + k2_phi);
-  phi = boundary_conditions(phi);
+  /*phi = boundary_conditions(phi);*/
   phidot += 0.5 * (k1_phidot + k2_phidot);
 
   t += dt;
