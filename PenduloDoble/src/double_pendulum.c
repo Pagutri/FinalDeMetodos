@@ -34,7 +34,7 @@ salma.gutierrez@cimat.mx
 int main(int argc, char **argv)
 {
 int n, N;
-double t, dt;
+double t, dt = 0.01;
 double k1_theta, k2_theta, k1_thetadot, k2_thetadot;
 double theta, thetadot, thetadotdot;
 double k1_phi, k2_phi, k1_phidot, k2_phidot;
@@ -44,14 +44,11 @@ struct SDL_graphics *SDL_graphics;
 SDL_Event event;
 FILE *output, *shscript;
 
-parse_commandline(argc, argv, &N, &dt);
+parse_commandline(argc, argv, &N, &theta, &phi);
 
-output = fopen(argv[3], "w");
-initialize_rand();
+output = fopen(argv[4], "w");
 
-/* Condiciones iniciales */
-theta = fRand(0.0, PI);
-phi = fRand(0.0, PI);
+/* Velocidades iniciales */
 thetadot = 0.0;
 phidot = 0.0;
 t = 0.0;
