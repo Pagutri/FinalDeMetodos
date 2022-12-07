@@ -4,7 +4,7 @@
 
 void parse_commandline(int argc, char **argv, int *N)
 {
-if(argc != 3)
+if(argc != 4)
   {
   explain_useage_exit(argv[0]);
   }
