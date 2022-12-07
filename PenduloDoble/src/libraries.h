@@ -16,7 +16,6 @@
 #include "SDL_datastructure.h"
 #include "visualization.h"
 #include "simple_random.h"
-#include "double_pendulum.h"
 
 
 #endif
